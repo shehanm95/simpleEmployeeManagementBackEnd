@@ -8,7 +8,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,21 +26,17 @@ public class EmployeeController {
     @Autowired
     EmployeeRepo employeeRepo;
 
-
     @GetMapping("/all")
-    public List<Employee> getAllEmployees(){
-    return employeeRepo.findAll();
+    public List<Employee> getAllEmployees() {
+        return employeeRepo.findAll();
     }
-
 
     @GetMapping("")
-    public String emp(){
-    return "Employee";
+    public String emp() {
+        return "Employee";
     }
 
-
     private static final String UPLOAD_DIR = "src/main/resources/static/images/employee/";
-
 
     @PostMapping("/add")
     public Employee allEmployee(
@@ -61,7 +56,7 @@ public class EmployeeController {
 
             Path targetPath = Paths.get(UPLOAD_DIR +
                     savedEmployee.getId()
-                    +getFileExtension(profile.getOriginalFilename()));
+                    + getFileExtension(profile.getOriginalFilename()));
 
             // Use Files.copy to save the file
             try {
@@ -70,28 +65,15 @@ public class EmployeeController {
                 throw new RuntimeException(e);
             }
         }
-        return  savedEmployee;
+        return savedEmployee;
     }
+
     private String getFileExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
-
-    @GetMapping("/pro")
-    public Resource getImage() throws Exception {
-        Path filePath = Paths.get(UPLOAD_DIR + "pro.png");
-        Resource resource = new UrlResource(filePath.toUri());
-
-        if (resource.exists() || resource.isReadable()) {
-            return resource;
-        } else {
-            System.out.println("image not fount");
-        }
-        return resource;
-    }
-
     @DeleteMapping("/delete/{id}")
-    public String deleteEmployee(@PathVariable int id){
+    public String deleteEmployee(@PathVariable int id) {
         // Delete the employee record from the database
         employeeRepo.deleteById(id);
 
@@ -102,7 +84,7 @@ public class EmployeeController {
                     .findFirst()
                     .ifPresent(file -> {
                         try {
-                            Files.delete(file);  // Delete the file
+                            Files.delete(file); // Delete the file
                             System.out.println("Deleted file: " + file);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -114,6 +96,5 @@ public class EmployeeController {
 
         return "Employee and image deleted successfully.";
     }
-
 
 }
